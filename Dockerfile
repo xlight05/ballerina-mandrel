@@ -70,9 +70,9 @@ RUN cd build && native-image -jar hello_svc.jar \
 
 FROM alpine
 
-ENV GLIBC_VERSION=2.27-r0 
+ENV GLIBC_VERSION=2.35-r0
 
-RUN apk add --no-cache libstdc++
+RUN apk add --no-cache libstdc++6
 
 RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
     &&  wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/$GLIBC_VERSION/glibc-$GLIBC_VERSION.apk" \
