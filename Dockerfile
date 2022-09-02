@@ -31,6 +31,8 @@ FROM alpine AS build
 
 WORKDIR /app
 
+USER root
+
 ENV GLIBC_VERSION=2.27-r0 
 
 RUN apk --no-cache add ca-certificates wget gcc zlib zlib-dev libc-dev
@@ -72,11 +74,12 @@ ENV JAVA_HOME="/app/mandrel-java11-22.2.0.0-Final"
 ENV GRAALVM_HOME="${JAVA_HOME}"
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
-# RUN ls /app/mandrel-java11-22.2.0.0-Final/bin
+RUN ls -la /app/mandrel-java11-22.2.0.0-Final/bin
 
 # RUN chmod -R 755 /app/mandrel-java11-22.2.0.0-Final/bin/
 
-RUN native-image --version
+RUN /app/mandrel-java11-22.2.0.0-Final/bin/java --version
+RUN /app/mandrel-java11-22.2.0.0-Final/bin/native-image --version
 
 RUN cd build && native-image -jar hello_svc.jar \
  --no-fallback \
