@@ -27,30 +27,7 @@
 #  -H:Name=output
 
 
-FROM alpine AS build
-
-WORKDIR /app
-
-USER root
-
-ENV GLIBC_VERSION=2.27-r0 
-
-RUN apk --no-cache add ca-certificates wget gcc zlib zlib-dev libc-dev
-
-RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
-    &&  wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/$GLIBC_VERSION/glibc-$GLIBC_VERSION.apk" \
-    &&  apk --no-cache add "glibc-$GLIBC_VERSION.apk" \
-    &&  rm "glibc-$GLIBC_VERSION.apk" \
-    &&  wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/$GLIBC_VERSION/glibc-bin-$GLIBC_VERSION.apk" \
-    &&  apk --no-cache add "glibc-bin-$GLIBC_VERSION.apk" \
-    &&  rm "glibc-bin-$GLIBC_VERSION.apk" \
-    &&  wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/$GLIBC_VERSION/glibc-i18n-$GLIBC_VERSION.apk" \
-    &&  apk --no-cache add "glibc-i18n-$GLIBC_VERSION.apk" \
-    &&  rm "glibc-i18n-$GLIBC_VERSION.apk"
-
-RUN apk -U update && apk -U add  ca-certificates wget gcc zlib zlib-dev libc-dev
-
-RUN apk add curl
+FROM ubuntu AS build
 
 COPY hello_svc.jar build/
 COPY jni-config.json build/
@@ -59,27 +36,17 @@ COPY reflect-config.json build/
 COPY resource-config.json build/
 COPY serialization-config.json build/
 
-# RUN apt update
-# RUN apt upgrade -y
-# RUN apt install curl git g++ zlib1g-dev libfreetype6-dev lib32stdc++6 -y
-
-RUN ls -la
-RUN ls build
+RUN apt update
+RUN apt upgrade -y
+RUN apt install curl git g++ zlib1g-dev libfreetype6-dev lib32stdc++6 -y
 
 RUN curl -sL https://github.com/graalvm/mandrel/releases/download/mandrel-22.2.0.0-Final/mandrel-java11-linux-amd64-22.2.0.0-Final.tar.gz -o mandrel-java11-linux-amd64-22.2.0.0-Final.tar.gz
 RUN tar -xf mandrel-java11-linux-amd64-22.2.0.0-Final.tar.gz
 
 RUN export TEMP_PATH=$(pwd)
-ENV JAVA_HOME="/app/mandrel-java11-22.2.0.0-Final"
+ENV JAVA_HOME="/mandrel-java11-22.2.0.0-Final"
 ENV GRAALVM_HOME="${JAVA_HOME}"
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
-
-RUN ls -la /app/mandrel-java11-22.2.0.0-Final/bin
-
-# RUN chmod -R 755 /app/mandrel-java11-22.2.0.0-Final/bin/
-
-RUN /app/mandrel-java11-22.2.0.0-Final/bin/java --version
-RUN /app/mandrel-java11-22.2.0.0-Final/bin/native-image --version
 
 RUN cd build && native-image -jar hello_svc.jar \
  --no-fallback \
@@ -104,6 +71,8 @@ RUN cd build && native-image -jar hello_svc.jar \
 FROM alpine
 
 ENV GLIBC_VERSION=2.27-r0 
+
+RUN apk add --no-cache libstdc++
 
 RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
     &&  wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/$GLIBC_VERSION/glibc-$GLIBC_VERSION.apk" \
