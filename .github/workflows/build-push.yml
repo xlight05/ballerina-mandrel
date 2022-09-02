@@ -18,3 +18,8 @@ jobs:
       run: |
         docker build -t xlight05/mandren-http:latest .
         docker push xlight05/mandren-http:latest
+    - name: Docker Run
+      run: |
+        docker run -d -p 9090:9090 xlight05/mandren-http:latest
+        docker ps
+        curl http://localhost:9090/greeting

@@ -29,6 +29,8 @@
 
 FROM alpine AS build
 
+WORKDIR /app
+
 ENV GLIBC_VERSION=2.27-r0 
 
 RUN apk --no-cache add ca-certificates wget gcc zlib zlib-dev libc-dev
@@ -59,13 +61,22 @@ COPY serialization-config.json build/
 # RUN apt upgrade -y
 # RUN apt install curl git g++ zlib1g-dev libfreetype6-dev lib32stdc++6 -y
 
+RUN ls -la
+RUN ls build
+
 RUN curl -sL https://github.com/graalvm/mandrel/releases/download/mandrel-22.2.0.0-Final/mandrel-java11-linux-amd64-22.2.0.0-Final.tar.gz -o mandrel-java11-linux-amd64-22.2.0.0-Final.tar.gz
 RUN tar -xf mandrel-java11-linux-amd64-22.2.0.0-Final.tar.gz
 
 RUN export TEMP_PATH=$(pwd)
-ENV JAVA_HOME="/mandrel-java11-22.2.0.0-Final"
+ENV JAVA_HOME="/app/mandrel-java11-22.2.0.0-Final"
 ENV GRAALVM_HOME="${JAVA_HOME}"
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
+# RUN ls /app/mandrel-java11-22.2.0.0-Final/bin
+
+# RUN chmod -R 755 /app/mandrel-java11-22.2.0.0-Final/bin/
+
+RUN native-image --version
 
 RUN cd build && native-image -jar hello_svc.jar \
  --no-fallback \
