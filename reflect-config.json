@@ -1,0 +1,136 @@
+[
+    {
+      "name": "io.netty.channel.socket.nio.NioSocketChannel",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "name": "io.netty.channel.socket.nio.NioServerSocketChannel",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "name": "com.mysql.cj.conf.url.SingleConnectionUrl",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "com.mysql.cj.conf.ConnectionUrlParser",
+            "java.util.Properties"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "com.mysql.cj.jdbc.MysqlDataSource",
+      "queryAllPublicMethods": true,
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        },
+        {
+          "name": "setPassword",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setUrl",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        },
+        {
+          "name": "setUser",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "com.mysql.cj.log.StandardLogger",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "com.mysql.cj.protocol.StandardSocketFactory",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "name": "com.zaxxer.hikari.HikariConfig",
+      "allDeclaredFields": true
+    },
+    {
+      "name": "[Lcom.zaxxer.hikari.util.ConcurrentBag$IConcurrentBagEntry;"
+    },
+    {
+      "name": "[Ljava.sql.Statement;"
+    },
+    {
+      "name": "org.apache.kafka.clients.consumer.RangeAssignor",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "name": "org.apache.kafka.clients.producer.internals.DefaultPartitioner",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "name": "org.apache.kafka.common.serialization.ByteArrayDeserializer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "name": "org.apache.kafka.common.serialization.ByteArraySerializer",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
+    },
+    {
+      "name": "org.apache.kafka.common.utils.AppInfoParser$AppInfo",
+      "queryAllPublicConstructors": true
+    },
+    {
+      "name": "org.apache.kafka.common.utils.AppInfoParser$AppInfoMBean",
+      "queryAllPublicMethods": true
+    }
+   ]
+   
+   
