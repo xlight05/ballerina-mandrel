@@ -46,6 +46,8 @@ RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/s
 
 RUN apk -U update && apk -U add  ca-certificates wget gcc zlib zlib-dev libc-dev
 
+RUN apk add curl
+
 COPY hello_svc.jar build/
 COPY jni-config.json build/
 COPY proxy-config.json build/
