@@ -1,0 +1,51 @@
+FROM debian:11 AS build
+
+COPY hello_svc.jar build/
+COPY jni-config.json build/
+COPY proxy-config.json build/
+COPY reflect-config.json build/
+COPY resource-config.json build/
+COPY serialization-config.json build/
+
+RUN apt update
+RUN apt upgrade -y
+RUN apt install curl git g++ zlib1g-dev libfreetype6-dev -y
+
+RUN curl -sL https://github.com/graalvm/mandrel/releases/download/mandrel-22.2.0.0-Final/mandrel-java11-linux-amd64-22.2.0.0-Final.tar.gz -o mandrel-java11-linux-amd64-22.2.0.0-Final.tar.gz
+RUN tar -xf mandrel-java11-linux-amd64-22.2.0.0-Final.tar.gz
+
+RUN export TEMP_PATH=$(pwd)
+ENV JAVA_HOME="/mandrel-java11-22.2.0.0-Final"
+ENV GRAALVM_HOME="${JAVA_HOME}"
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
+RUN cd build && native-image -jar hello_svc.jar \
+ --static \
+ --no-fallback \
+ --enable-url-protocols=http,https \
+ --initialize-at-build-time=org.slf4j \
+ --initialize-at-run-time=io.netty.handler.ssl.BouncyCastleAlpnSslUtils \
+ --initialize-at-run-time=io.netty.handler.codec.http2 \
+ --initialize-at-run-time=io.netty.handler.codec.compression.ZstdOptions \
+ --initialize-at-run-time=io.netty.handler.ssl.OpenSsl \
+ --initialize-at-run-time=io.netty.handler.ssl.OpenSslPrivateKeyMethod \
+ --initialize-at-run-time=io.netty.handler.ssl.ReferenceCountedOpenSslEngine  \
+ --initialize-at-run-time=io.netty.internal.tcnative \
+ --initialize-at-run-time=io.netty.handler.ssl.OpenSslAsyncPrivateKeyMethod \
+ -H:ResourceConfigurationFiles=resource-config.json \
+ -H:ReflectionConfigurationFiles=reflect-config.json\
+ -H:JNIConfigurationFiles=jni-config.json \
+ -H:DynamicProxyConfigurationFiles=proxy-config.json \
+ -H:SerializationConfigurationFiles=serialization-config.json \
+ -H:MaxDuplicationFactor=25.0 \
+ -H:Name=output
+
+
+FROM alpine
+
+COPY --from=build /build/output /
+
+EXPOSE 9090
+
+CMD ["/output"]
+ 
