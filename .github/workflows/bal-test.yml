@@ -16,6 +16,10 @@ jobs:
         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
     - name: Docker build
       run: |
-        wget https://dist.ballerina.io/downloads/2201.2.0/ballerina-2201.2.0-swan-lake.zip
-        docker build --build-arg BALLERINA_DIST="ballerina-2201.2.0-swan-lake.zip" -t xlight05/ballerina-test:1 .
-        docker push xlight05/ballerina-test:1
+        wget https://github.com/ballerina-platform/ballerina-distribution/releases/download/v2201.2.1-rc1/ballerina-2201.2.1-swan-lake-linux-x64.deb
+        sudo dpkg -i ballerina-2201.2.1-swan-lake-linux-x64.deb
+        cd bbe && bal build
+        docker images
+        docker run -d -p 9090:9090 bbe:latest
+        sleep 5
+        curl http://localhost:9090/helloWorld/sayHello
