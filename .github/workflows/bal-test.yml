@@ -18,8 +18,11 @@ jobs:
       run: |
         wget https://github.com/ballerina-platform/ballerina-distribution/releases/download/v2201.2.1-rc1/ballerina-2201.2.1-swan-lake-linux-x64.deb
         sudo dpkg -i ballerina-2201.2.1-swan-lake-linux-x64.deb
-        cd bbe && bal build
+        cd bbe && bal build && cat target/docker/bbe/Dockerfile
         docker images
         docker run -d -p 9090:9090 bbe:latest
         sleep 5
+        docker tag bbe:latest xlight05/bbe:latest 
+        docker push xlight05/bbe:latest 
         curl http://localhost:9090/helloWorld/sayHello
+        docker ps
